@@ -2,27 +2,27 @@ var app = new Vue({
   el: "#app",
   data: {
     config: {
-      loanAmount: 440000,
+      loanAmount: 250000,
       extraPayments: [
         {
           year: 1,
           month: 12,
-          amount: 35000,
+          amount: 10000,
         },
         {
           year: 2,
           month: 12,
-          amount: 35000,
+          amount: 10000,
         },
         {
           year: 3,
           month: 12,
-          amount: 35000,
+          amount: 10000,
         },
         {
           year: 4,
           month: 12,
-          amount: 35000,
+          amount: 10000,
         },
       ],
       options: [
