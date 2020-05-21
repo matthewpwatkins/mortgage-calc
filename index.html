@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Mortgage Calc</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Mortgage Calc</a>
+        </div>
+    </nav>
+
+    <main id="app" role="main" class="container-fluid" style="margin-top: 6rem;">
+        <div class="card">
+            <div class="card-body">
+                <h3>Parameters</h3>
+                <div class="form-group">
+                    <label>Loan amount</label>
+                    <input type="number" class="form-control" v-model="config.loanAmount" readonly>
+                    <small class="form-text text-muted">The loan amount (home price - down payment)</small>
+                </div>
+
+                <h5>Extra payments</h5>
+                <table class="table table-bordered table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Month</th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(extraPayment, extraPaymentIndex) in config.extraPayments">
+                            <td>{{ extraPayment.year }}</td>
+                            <td>{{ extraPayment.month }}</td>
+                            <td>${{ Number(extraPayment.amount.toFixed(2)).toLocaleString('en') }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="row mt-4">
+                    <div v-for="(option, optionIndex) in config.options" class="col">
+                        <h5>Rate Option {{ optionIndex + 1}}</h5>
+                        <div class="form-group">
+                            <label>Term (months)</label>
+                            <input type="number" class="form-control" v-model="option.term" readonly>
+                            <small class="form-text text-muted">The number of months the loan will last</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Rate (decimal)</label>
+                            <input type="number" class="form-control" v-model="option.rate" readonly>
+                            <small class="form-text text-muted">The rate expressed as a decimal</small>
+                        </div>
+                        <div class="form-group">
+                            <label>P&I</label>
+                            <input type="number" class="form-control" v-model="option.monthlyPayment" readonly>
+                            <small class="form-text text-muted">The monthly principal and interest portion of the monthly payment</small>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" v-on:click="calculateAll" class="btn btn-primary float-right">Calculate</button>
+            </div>
+        </div>
+
+        <div class="row mt-3">
+            <div v-for="(schedule, scheduleIndex) in schedules" class="col">
+                <table class="table table-bordered table-striped table-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Yr</th>
+                            <th>Mo</th>
+                            <th>Prin.</th>
+                            <th>Int.</th>
+                            <th>Cum. principal</th>
+                            <th>Cum. interest</th>
+                            <th>Rem. balance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <template v-for="(year, yearIndex) in schedule.years">
+                            <tr v-for="(payment, paymentIndex) in year.payments"  :class="paymentIndex == 11 ? 'table-info' : ''">
+                                <td>{{ yearIndex + 1 }}</td>
+                                <td>{{ paymentIndex + 1 }}</td>
+                                <td>${{ Number(payment.principal.toFixed(2)).toLocaleString('en') }}</td>
+                                <td>${{ Number(payment.interest.toFixed(2)).toLocaleString('en') }}</td>
+                                <td>${{ Number(payment.cumulativePrincipal.toFixed(2)).toLocaleString('en') }}</td>
+                                <td>${{ Number(payment.cumulativeInterest.toFixed(2)).toLocaleString('en') }}</td>
+                                <td>${{ Number(payment.remainingBalance.toFixed(2)).toLocaleString('en') }}</td>
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="./app.js"></script>
+</body>
+
+</html>
