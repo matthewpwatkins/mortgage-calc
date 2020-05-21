@@ -73,9 +73,10 @@ var app = new Vue({
         balance -= payment.principal;
 
         for (const extraPayment of this.config.extraPayments) {
-            if ((extraPayment.year * 12) + extraPayment.month == i) {
+            if (((extraPayment.year - 1) * 12) + extraPayment.month == (i + 1)) {
                 payment.extraPaymentAmount = Math.min(extraPayment.amount, balance);
                 balance -= payment.extraPaymentAmount;
+                break;
             }
         }
 

@@ -87,7 +87,7 @@
                             <tr v-for="(payment, paymentIndex) in year.payments"  :class="paymentIndex == 11 ? 'table-info' : ''">
                                 <td>{{ yearIndex + 1 }}</td>
                                 <td>{{ paymentIndex + 1 }}</td>
-                                <td>${{ Number(payment.principal.toFixed(2)).toLocaleString('en') }}</td>
+                                <td>${{ Number((payment.principal + payment.extraPaymentAmount).toFixed(2)).toLocaleString('en') }}</td>
                                 <td>${{ Number(payment.interest.toFixed(2)).toLocaleString('en') }}</td>
                                 <td>${{ Number(payment.cumulativePrincipal.toFixed(2)).toLocaleString('en') }}</td>
                                 <td>${{ Number(payment.cumulativeInterest.toFixed(2)).toLocaleString('en') }}</td>
