@@ -29,12 +29,10 @@ var app = new Vue({
         {
           term: 360,
           rate: 3.125,
-          monthlyPayment: 1884.85,
         },
         {
           term: 180,
           rate: 2.5,
-          monthlyPayment: 2933.87,
         },
       ],
     },
@@ -46,10 +44,12 @@ var app = new Vue({
     },
     calculate: function (option) {
       const schedule = {
+        monthlyPayment: this.calculateMonthlyPayment(option),
         years: [],
       };
 
       const monthlyInterestRate = (option.rate * 0.01) / 12;
+
       let balance = this.config.loanAmount;
       let cumulativeInterest = 0;
 
@@ -68,27 +68,28 @@ var app = new Vue({
 
         payment.principal = Math.min(
           balance,
-          option.monthlyPayment - payment.interest
+          schedule.monthlyPayment - payment.interest
         );
         balance -= payment.principal;
 
         for (const extraPayment of this.config.extraPayments) {
-            if (((extraPayment.year - 1) * 12) + extraPayment.month == (i + 1)) {
-                payment.extraPaymentAmount = Math.min(extraPayment.amount, balance);
-                balance -= payment.extraPaymentAmount;
-                break;
-            }
+          if ((extraPayment.year - 1) * 12 + extraPayment.month == i + 1) {
+            payment.extraPaymentAmount = Math.min(extraPayment.amount, balance);
+            balance -= payment.extraPaymentAmount;
+            break;
+          }
         }
 
         payment.cumulativeInterest = cumulativeInterest;
         payment.remainingBalance = balance;
-        payment.cumulativePrincipal = this.config.loanAmount - payment.remainingBalance;
+        payment.cumulativePrincipal =
+          this.config.loanAmount - payment.remainingBalance;
 
         year.payments.push(payment);
 
         if (balance == 0) {
-            // Paid off early!
-            break;
+          // Paid off early!
+          break;
         }
       }
 
@@ -102,6 +103,13 @@ var app = new Vue({
       }
 
       return schedule;
+    },
+    calculateMonthlyPayment: function (option) {
+      // From https://www.reference.com/business-finance/formula-calculating-mortgage-payment-bedbdfd5679ce280
+      const L = this.config.loanAmount;
+      const c = (option.rate * 0.01) / 12;
+      const n = option.term;
+      return (L * (c * Math.pow(1 + c, n))) / (Math.pow(1 + c, n) - 1)
     },
   },
 });
