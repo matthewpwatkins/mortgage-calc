@@ -48,14 +48,22 @@ var app = new Vue({
 
         // Build the normal payment
         const year = schedule.years[schedule.years.length - 1];
-        const payment = { interest: monthlyInterestRate * balance };
+        const payment = {
+          interest: monthlyInterestRate * balance,
+          principalFromExtra: 0
+        };
         payment.principal = Math.min(balance, schedule.monthlyPayment - payment.interest);
         balance -= payment.principal;
 
         // Apply extra payment if necessary
         for (const extraPayment of config.extraPayments) {
-          if ((extraPayment.year - 1) * 12 + extraPayment.month == i + 1) {
+          const extraPaymentTermIndex = ((extraPayment.year - 1) * 12) + extraPayment.month - 1;
+          const appliesToThisMonth = i == extraPaymentTermIndex;
+          const recursOnThisMonth = !appliesToThisMonth && extraPayment.recurrenceInterval > 0 && i > extraPaymentTermIndex && (i - extraPaymentTermIndex) % extraPayment.recurrenceInterval == 0;
+          console.log(`i=${i}, extraPaymentTermIndex=${extraPaymentTermIndex}, appliesToThisMonth=${appliesToThisMonth}, recursOnThisMonth=${recursOnThisMonth}`);
+          if (appliesToThisMonth || recursOnThisMonth) {
             const amountToAdd = Math.min(extraPayment.amount, balance);
+            payment.principalFromExtra += amountToAdd;
             payment.principal += amountToAdd;
             balance -= amountToAdd;
           }
