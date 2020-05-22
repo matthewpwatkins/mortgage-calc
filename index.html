@@ -25,7 +25,7 @@
                 <i class="fas fa-plus mr-2"></i> Comp Scenario
             </button>
         </div>
-        
+
         <div class="row">
             <div class="col" v-for="(config, configIndex) in configs">
                 <div class="card">
@@ -36,7 +36,8 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
                                 </div>
-                                <input type="number" class="form-control" v-model="config.loanAmount" placeholder="ex. 250000">
+                                <input type="number" class="form-control" v-model="config.loanAmount"
+                                    placeholder="ex. 250000">
                             </div>
                             <small class="form-text text-muted">The loan amount (home price minus down payment)</small>
                         </div>
@@ -67,13 +68,13 @@
                             <div v-for="(extraPayment, extraPaymentIndex) in config.extraPayments" class="row mb-3">
                                 <div class="col">
                                     <label>Year</label>
-                                    <input type="number" class="form-control form-control-sm" v-model="extraPayment.year"
-                                        placeholder="ex. 2">
+                                    <input type="number" class="form-control form-control-sm"
+                                        v-model="extraPayment.year" placeholder="ex. 2">
                                 </div>
                                 <div class="col">
                                     <label>Month</label>
-                                    <input type="number" class="form-control form-control-sm" v-model="extraPayment.month"
-                                        placeholder="ex. 7">
+                                    <input type="number" class="form-control form-control-sm"
+                                        v-model="extraPayment.month" placeholder="ex. 7">
                                 </div>
                                 <div class="col">
                                     <label>Amount</label>
@@ -94,7 +95,7 @@
 
         <div class="row mt-4">
             <div v-for="(schedule, scheduleIndex) in schedules" class="col">
-                <h5>Summary</h5>
+                <h5>Loan Summary</h5>
                 <table class="table table-bordered table-sm">
                     <tr>
                         <th>Monthly payment</th>
@@ -103,15 +104,45 @@
                     <tr>
                         <th>Length</th>
                         <td v-if="schedule.lastPaymentMonth % 12 == 0">{{ schedule.lastPaymentYear }} year(s) </td>
-                        <td v-else>{{ schedule.lastPaymentYear - 1 }} year(s) {{ schedule.lastPaymentMonth }} months(s)</td>
+                        <td v-else>{{ schedule.lastPaymentYear - 1 }} year(s) {{ schedule.lastPaymentMonth }} months(s)
+                        </td>
                     </tr>
                     <tr>
                         <th>Total interest</th>
-                        <td>${{ Number(schedule.lastPayment.cumulativeInterest.toFixed(2)).toLocaleString('en') }}</td>
+                        <td>${{ Number(schedule.summary.interest.toFixed(2)).toLocaleString('en') }}</td>
                     </tr>
                 </table>
+            </div>
+        </div>
 
-                <h5 class="mt-4">Amortization Schedule</h5>
+        <div class="row mt-4">
+            <div v-for="(schedule, scheduleIndex) in schedules" class="col">
+                <h5>Yearly Summary</h5>
+                <table class="table table-bordered table-sm">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Year</th>
+                            <th>Prin.</th>
+                            <th>Int.</th>
+                            <th>Bal.</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="(year, yearIndex) in schedule.years">
+                            <td>{{ yearIndex + 1}}</td>
+                            <td>${{ Number(year.summary.principal.toFixed(2)).toLocaleString('en') }}</td>
+                            <td>${{ Number(year.summary.interest.toFixed(2)).toLocaleString('en') }}</td>
+                            <td>${{ Number(year.lastPayment.snapshot.remainingBalance.toFixed(2)).toLocaleString('en') }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div v-for="(schedule, scheduleIndex) in schedules" class="col">
+                <h5>Amortization Schedule</h5>
                 <table class="table table-bordered table-striped table-sm mt-3">
                     <thead class="thead-dark">
                         <tr>
@@ -119,9 +150,9 @@
                             <th>Mo</th>
                             <th>Prin.</th>
                             <th>Int.</th>
-                            <th>Cum. principal</th>
-                            <th>Cum. interest</th>
-                            <th>Rem. balance</th>
+                            <th>Cum. Prin.</th>
+                            <th>Cum. Int.</th>
+                            <th>Bal.</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -130,12 +161,14 @@
                                 :class="paymentIndex == 11 ? 'table-info' : ''">
                                 <td>{{ yearIndex + 1 }}</td>
                                 <td>{{ paymentIndex + 1 }}</td>
-                                <td>${{ Number((payment.principal + payment.extraPaymentAmount).toFixed(2)).toLocaleString('en') }}
-                                </td>
+                                <td>${{ Number((payment.principal).toFixed(2)).toLocaleString('en') }}</td>
                                 <td>${{ Number(payment.interest.toFixed(2)).toLocaleString('en') }}</td>
-                                <td>${{ Number(payment.cumulativePrincipal.toFixed(2)).toLocaleString('en') }}</td>
-                                <td>${{ Number(payment.cumulativeInterest.toFixed(2)).toLocaleString('en') }}</td>
-                                <td>${{ Number(payment.remainingBalance.toFixed(2)).toLocaleString('en') }}</td>
+                                <td>${{ Number(payment.snapshot.cumulativePrincipal.toFixed(2)).toLocaleString('en') }}
+                                </td>
+                                <td>${{ Number(payment.snapshot.cumulativeInterest.toFixed(2)).toLocaleString('en') }}
+                                </td>
+                                <td>${{ Number(payment.snapshot.remainingBalance.toFixed(2)).toLocaleString('en') }}
+                                </td>
                             </tr>
                         </template>
                     </tbody>
