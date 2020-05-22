@@ -19,7 +19,6 @@
     <main id="app" role="main" class="container-fluid" style="margin-top: 4.5rem;">
         <div class="card">
             <div class="card-body">
-                <h3>Parameters</h3>
                 <div class="form-group">
                     <label>Loan amount</label>
                     <div class="input-group">
@@ -31,15 +30,22 @@
                     <small class="form-text text-muted">The loan amount (home price minus down payment)</small>
                 </div>
 
-                <h5>Extra payments</h5>
+                <hr class="mt-4 mb-4" />
+
+                <h5>
+                    Extra payments
+                    <button class="btn btn-primary btn-sm float-right" v-on:click="addExtraPayment">
+                        <i class="fas fa-plus mr-2"></i> Extra Payment
+                    </button>
+                </h5>
                 <div v-for="(extraPayment, extraPaymentIndex) in config.extraPayments" class="row mb-3">
                     <div class="col">
                         <label>Year</label>
-                        <input type="number" class="form-control" v-model="extraPayment.year">
+                        <input type="number" class="form-control" v-model="extraPayment.year" placeholder="2">
                     </div>
                     <div class="col">
                         <label>Month</label>
-                        <input type="number" class="form-control" v-model="extraPayment.month">
+                        <input type="number" class="form-control" v-model="extraPayment.month" placeholder="7">
                     </div>
                     <div class="col">
                         <label>Amount</label>
@@ -47,12 +53,14 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">$</span>
                             </div>
-                            <input type="number" class="form-control" v-model="extraPayment.amount">
+                            <input type="number" class="form-control" v-model="extraPayment.amount"  placeholder="5000">
                         </div>
                     </div>
                 </div>
 
-                <div class="row mt-4">
+                <hr class="mt-4 mb-4" />
+
+                <div class="row">
                     <div v-for="(option, optionIndex) in config.options" class="col">
                         <h5>Rate Option #{{ optionIndex + 1}}</h5>
                         <div class="form-group">
@@ -114,6 +122,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="./app.js"></script>
+    <script src="https://kit.fontawesome.com/71d0e575d1.js" crossorigin="anonymous"></script>
 </body>
 
 </html>

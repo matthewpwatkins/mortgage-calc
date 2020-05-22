@@ -3,28 +3,7 @@ var app = new Vue({
   data: {
     config: {
       loanAmount: 250000,
-      extraPayments: [
-        {
-          year: 1,
-          month: 12,
-          amount: 10000,
-        },
-        {
-          year: 2,
-          month: 12,
-          amount: 10000,
-        },
-        {
-          year: 3,
-          month: 12,
-          amount: 10000,
-        },
-        {
-          year: 4,
-          month: 12,
-          amount: 10000,
-        },
-      ],
+      extraPayments: [],
       options: [
         {
           term: 360,
@@ -39,6 +18,9 @@ var app = new Vue({
     schedules: [],
   },
   methods: {
+    addExtraPayment: function() {
+      this.config.extraPayments.push({});
+    },
     calculateAll: function () {
       this.schedules = this.config.options.map(this.calculate);
     },
