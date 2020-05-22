@@ -4,6 +4,8 @@ var app = new Vue({
     configs: [
       {
         term: 360,
+        rate: 3.125,
+        loanAmount: 440000,
         extraPayments: [],
       },
     ],
@@ -81,6 +83,10 @@ var app = new Vue({
         lastPayment.principal += lastPayment.remainingBalance;
         lastPayment.remainingBalance = 0;
       }
+
+      schedule.lastPaymentYear = schedule.years.length;
+      schedule.lastPaymentMonth = lastYear.payments.length;
+      schedule.lastPayment = lastPayment;
 
       return schedule;
     },

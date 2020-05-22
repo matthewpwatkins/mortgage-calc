@@ -17,7 +17,7 @@
     </nav>
 
     <main id="app" role="main" class="container-fluid" style="margin-top: 4.5rem;">
-        <div class="mb-4">
+        <div class="mb-3">
             <button type="button" class="btn btn-sm btn-primary float-right" v-on:click="calculateAll">
                 <i class="fas fa-calculator mr-2"></i> Calculate
             </button>
@@ -92,9 +92,27 @@
             </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row mt-3">
             <div v-for="(schedule, scheduleIndex) in schedules" class="col">
-                <h5>Monthly P&I Payment: ${{ Number(schedule.monthlyPayment.toFixed(2)).toLocaleString('en') }}</h5>
+                <h5>Summary</h5>
+                <table class="table table-bordered table-sm">
+                    <tr>
+                        <th>Monthly payment</th>
+                        <td>${{ Number(schedule.monthlyPayment.toFixed(2)).toLocaleString('en') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Length</th>
+                        <td v-if="schedule.lastPaymentMonth % 12 == 0">{{ schedule.lastPaymentYear }} year(s) </td>
+                        <td v-else>{{ schedule.lastPaymentYear - 1 }} year(s) {{ schedule.lastPaymentMonth }} months(s)</td>
+                    </tr>
+                    <tr>
+                        <th>Total interest</th>
+                        <td>${{ Number(schedule.lastPayment.cumulativeInterest.toFixed(2)).toLocaleString('en') }}</td>
+                    </tr>
+                </table>
+
+                <!-- <h5>Monthly P&I Payment: ${{ Number(schedule.monthlyPayment.toFixed(2)).toLocaleString('en') }}</h5> -->
+                <h5>Amortization Schedule</h5>
                 <table class="table table-bordered table-striped table-sm mt-3">
                     <thead class="thead-dark">
                         <tr>
