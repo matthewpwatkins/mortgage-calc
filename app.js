@@ -4,8 +4,6 @@ var app = new Vue({
     configs: [
       {
         term: 360,
-        rate: 3.125,
-        loanAmount: 440000,
         extraPayments: [],
       },
     ],
