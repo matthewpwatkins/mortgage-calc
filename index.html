@@ -18,10 +18,10 @@
 
     <main id="app" role="main" class="container-fluid" style="margin-top: 4.5rem;">
         <div class="mb-4">
-            <button type="button" class="btn btn-primary float-right" v-on:click="calculateAll">
+            <button type="button" class="btn btn-sm btn-primary float-right" v-on:click="calculateAll">
                 <i class="fas fa-calculator mr-2"></i> Calculate
             </button>
-            <button class="btn btn-primary" v-on:click="addConfig">
+            <button class="btn btn-sm btn-primary" v-on:click="addConfig">
                 <i class="fas fa-plus mr-2"></i> Comp Scenario
             </button>
         </div>
@@ -32,7 +32,7 @@
                     <div class="card-body">
                         <div class="form-group">
                             <label>Loan amount</label>
-                            <div class="input-group">
+                            <div class="input-group input-group-sm">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">$</span>
                                 </div>
@@ -43,14 +43,14 @@
 
                         <div class="form-group">
                             <label>Loan term</label>
-                            <select class="form-control" v-model="config.term">
+                            <select class="form-control form-control-sm" v-model="config.term">
                                 <option value="360">30-year fixed</option>
                                 <option value="180">15-year fixed</option>
                             </select>
                         </div>
                         <div class="form-group">
                             <label>Rate</label>
-                            <div class="input-group">
+                            <div class="input-group input-group-sm">
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">%</span>
                                 </div>
@@ -67,21 +67,21 @@
                             <div v-for="(extraPayment, extraPaymentIndex) in config.extraPayments" class="row mb-3">
                                 <div class="col">
                                     <label>Year</label>
-                                    <input type="number" class="form-control" v-model="extraPayment.year"
+                                    <input type="number" class="form-control form-control-sm" v-model="extraPayment.year"
                                         placeholder="ex. 2">
                                 </div>
                                 <div class="col">
                                     <label>Month</label>
-                                    <input type="number" class="form-control" v-model="extraPayment.month"
+                                    <input type="number" class="form-control form-control-sm" v-model="extraPayment.month"
                                         placeholder="ex. 7">
                                 </div>
                                 <div class="col">
                                     <label>Amount</label>
-                                    <div class="input-group">
+                                    <div class="input-group input-group-sm">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text">$</span>
                                         </div>
-                                        <input type="number" class="form-control" v-model="extraPayment.amount"
+                                        <input type="number" class="form-control " v-model="extraPayment.amount"
                                             placeholder="ex.: 5000">
                                     </div>
                                 </div>
