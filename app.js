@@ -1,41 +1,39 @@
 var app = new Vue({
   el: "#app",
   data: {
-    config: {
-      loanAmount: 250000,
-      extraPayments: [],
-      options: [
-        {
-          term: 360,
-          rate: 3.125,
-        },
-        {
-          term: 180,
-          rate: 2.5,
-        },
-      ],
-    },
+    configs: [
+      {
+        term: 360,
+        extraPayments: [],
+      },
+    ],
     schedules: [],
   },
   methods: {
-    addExtraPayment: function() {
-      this.config.extraPayments.push({});
+    addConfig: function () {
+      this.configs.push({
+        term: 360,
+        extraPayments: [],
+      });
+    },
+    addExtraPayment: function (configIndex) {
+      this.configs[configIndex].extraPayments.push({});
     },
     calculateAll: function () {
-      this.schedules = this.config.options.map(this.calculate);
+      this.schedules = this.configs.map(this.calculate);
     },
-    calculate: function (option) {
+    calculate: function (config) {
       const schedule = {
-        monthlyPayment: this.calculateMonthlyPayment(option),
+        monthlyPayment: this.calculateMonthlyPayment(config),
         years: [],
       };
 
-      const monthlyInterestRate = (option.rate * 0.01) / 12;
+      const monthlyInterestRate = (config.rate * 0.01) / 12;
 
-      let balance = this.config.loanAmount;
+      let balance = config.loanAmount;
       let cumulativeInterest = 0;
 
-      for (let i = 0; i < option.term; i++) {
+      for (let i = 0; i < config.term; i++) {
         if (i % 12 == 0) {
           schedule.years.push({
             payments: [],
@@ -54,7 +52,7 @@ var app = new Vue({
         );
         balance -= payment.principal;
 
-        for (const extraPayment of this.config.extraPayments) {
+        for (const extraPayment of config.extraPayments) {
           if ((extraPayment.year - 1) * 12 + extraPayment.month == i + 1) {
             payment.extraPaymentAmount = Math.min(extraPayment.amount, balance);
             balance -= payment.extraPaymentAmount;
@@ -65,7 +63,7 @@ var app = new Vue({
         payment.cumulativeInterest = cumulativeInterest;
         payment.remainingBalance = balance;
         payment.cumulativePrincipal =
-          this.config.loanAmount - payment.remainingBalance;
+          config.loanAmount - payment.remainingBalance;
 
         year.payments.push(payment);
 
@@ -86,12 +84,12 @@ var app = new Vue({
 
       return schedule;
     },
-    calculateMonthlyPayment: function (option) {
+    calculateMonthlyPayment: function (config) {
       // From https://www.reference.com/business-finance/formula-calculating-mortgage-payment-bedbdfd5679ce280
-      const L = this.config.loanAmount;
-      const c = (option.rate * 0.01) / 12;
-      const n = option.term;
-      return (L * (c * Math.pow(1 + c, n))) / (Math.pow(1 + c, n) - 1)
+      const L = config.loanAmount;
+      const c = (config.rate * 0.01) / 12;
+      const n = config.term;
+      return (L * (c * Math.pow(1 + c, n))) / (Math.pow(1 + c, n) - 1);
     },
   },
 });

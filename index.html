@@ -17,55 +17,33 @@
     </nav>
 
     <main id="app" role="main" class="container-fluid" style="margin-top: 4.5rem;">
-        <div class="card">
-            <div class="card-body">
-                <div class="form-group">
-                    <label>Loan amount</label>
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">$</span>
-                        </div>
-                        <input type="number" class="form-control" v-model="config.loanAmount">
-                    </div>
-                    <small class="form-text text-muted">The loan amount (home price minus down payment)</small>
-                </div>
-
-                <hr class="mt-4 mb-4" />
-
-                <h5>
-                    Extra payments
-                    <button class="btn btn-primary btn-sm float-right" v-on:click="addExtraPayment">
-                        <i class="fas fa-plus mr-2"></i> Extra Payment
-                    </button>
-                </h5>
-                <div v-for="(extraPayment, extraPaymentIndex) in config.extraPayments" class="row mb-3">
-                    <div class="col">
-                        <label>Year</label>
-                        <input type="number" class="form-control" v-model="extraPayment.year" placeholder="2">
-                    </div>
-                    <div class="col">
-                        <label>Month</label>
-                        <input type="number" class="form-control" v-model="extraPayment.month" placeholder="7">
-                    </div>
-                    <div class="col">
-                        <label>Amount</label>
-                        <div class="input-group">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">$</span>
-                            </div>
-                            <input type="number" class="form-control" v-model="extraPayment.amount"  placeholder="5000">
-                        </div>
-                    </div>
-                </div>
-
-                <hr class="mt-4 mb-4" />
-
-                <div class="row">
-                    <div v-for="(option, optionIndex) in config.options" class="col">
-                        <h5>Rate Option #{{ optionIndex + 1}}</h5>
+        <div class="mb-4">
+            <button type="button" class="btn btn-primary float-right" v-on:click="calculateAll">
+                <i class="fas fa-calculator mr-2"></i> Calculate
+            </button>
+            <button class="btn btn-primary" v-on:click="addConfig">
+                <i class="fas fa-plus mr-2"></i> Comp Scenario
+            </button>
+        </div>
+        
+        <div class="row">
+            <div class="col" v-for="(config, configIndex) in configs">
+                <div class="card">
+                    <div class="card-body">
                         <div class="form-group">
-                            <label>Term</label>
-                            <select class="form-control" v-model="option.term">
+                            <label>Loan amount</label>
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">$</span>
+                                </div>
+                                <input type="number" class="form-control" v-model="config.loanAmount" placeholder="ex. 250000">
+                            </div>
+                            <small class="form-text text-muted">The loan amount (home price minus down payment)</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Loan term</label>
+                            <select class="form-control" v-model="config.term">
                                 <option value="360">30-year fixed</option>
                                 <option value="180">15-year fixed</option>
                             </select>
@@ -76,12 +54,41 @@
                                 <div class="input-group-prepend">
                                     <span class="input-group-text">%</span>
                                 </div>
-                                <input type="number" class="form-control" v-model="option.rate">
+                                <input type="number" class="form-control" v-model="config.rate" placeholder="3.25">
+                            </div>
+                        </div>
+
+                        <button class="btn btn-sm btn-primary float-right" v-on:click="addExtraPayment(configIndex)">
+                            <i class="fas fa-plus mr-2"></i> Extra Payment
+                        </button>
+
+                        <div v-if="config.extraPayments.length > 0">
+                            <h5>Extra payments</h5>
+                            <div v-for="(extraPayment, extraPaymentIndex) in config.extraPayments" class="row mb-3">
+                                <div class="col">
+                                    <label>Year</label>
+                                    <input type="number" class="form-control" v-model="extraPayment.year"
+                                        placeholder="ex. 2">
+                                </div>
+                                <div class="col">
+                                    <label>Month</label>
+                                    <input type="number" class="form-control" v-model="extraPayment.month"
+                                        placeholder="ex. 7">
+                                </div>
+                                <div class="col">
+                                    <label>Amount</label>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">$</span>
+                                        </div>
+                                        <input type="number" class="form-control" v-model="extraPayment.amount"
+                                            placeholder="ex.: 5000">
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button type="button" v-on:click="calculateAll" class="btn btn-primary float-right">Calculate</button>
             </div>
         </div>
 
