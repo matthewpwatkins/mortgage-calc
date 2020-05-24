@@ -136,7 +136,10 @@
                     <tbody>
                         <tr v-for="(year, yearIndex) in schedule.years">
                             <td>{{ yearIndex + 1}}</td>
-                            <td>${{ Number(year.summary.principal.toFixed(2)).toLocaleString('en') }}</td>
+                            <td>
+                                ${{ Number(year.summary.principal.toFixed(2)).toLocaleString('en') }}
+                                <span v-if="year.summary.extraPrincipal > 0" class="text-success ml-1">+ ${{ Number(year.summary.extraPrincipal.toFixed(2)).toLocaleString('en') }}</span>
+                            </td>
                             <td>${{ Number(year.summary.interest.toFixed(2)).toLocaleString('en') }}</td>
                             <td>${{ Number(year.lastPayment.snapshot.remainingBalance.toFixed(2)).toLocaleString('en') }}
                             </td>
@@ -169,7 +172,7 @@
                                 <td>{{ paymentIndex + 1 }}</td>
                                 <td>
                                     ${{ Number(payment.principal.toFixed(2)).toLocaleString('en') }}
-                                    <span v-if="payment.principalFromExtra > 0" class="text-success ml-2">(${{ Number(payment.principalFromExtra.toFixed(2)).toLocaleString('en') }} from extra)</span>
+                                    <span v-if="payment.extraPrincipal > 0" class="text-success ml-1">+ ${{ Number(payment.extraPrincipal.toFixed(2)).toLocaleString('en') }}</span>
                                 </td>
                                 <td>${{ Number(payment.interest.toFixed(2)).toLocaleString('en') }}</td>
                                 <td>${{ Number(payment.snapshot.cumulativePrincipal.toFixed(2)).toLocaleString('en') }}</td>

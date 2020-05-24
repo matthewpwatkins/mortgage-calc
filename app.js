@@ -30,7 +30,8 @@ var app = new Vue({
         years: [],
         summary: {
           interest: 0,
-          principal: 0
+          principal: 0,
+          extraPrincipal: 0
         }
       };
 
@@ -41,7 +42,8 @@ var app = new Vue({
             payments: [],
             summary: {
               interest: 0,
-              principal: 0
+              principal: 0,
+              extraPrincipal: 0
             }
           });
         }
@@ -50,7 +52,7 @@ var app = new Vue({
         const year = schedule.years[schedule.years.length - 1];
         const payment = {
           interest: monthlyInterestRate * balance,
-          principalFromExtra: 0
+          extraPrincipal: 0
         };
         payment.principal = Math.min(balance, schedule.monthlyPayment - payment.interest);
         balance -= payment.principal;
@@ -63,8 +65,7 @@ var app = new Vue({
           console.log(`i=${i}, extraPaymentTermIndex=${extraPaymentTermIndex}, appliesToThisMonth=${appliesToThisMonth}, recursOnThisMonth=${recursOnThisMonth}`);
           if (appliesToThisMonth || recursOnThisMonth) {
             const amountToAdd = Math.min(extraPayment.amount, balance);
-            payment.principalFromExtra += amountToAdd;
-            payment.principal += amountToAdd;
+            payment.extraPrincipal += amountToAdd;
             balance -= amountToAdd;
           }
         }
@@ -74,11 +75,13 @@ var app = new Vue({
         year.summary.interest += payment.interest;
         schedule.summary.principal += payment.principal;
         year.summary.principal += payment.principal;
+        schedule.summary.extraPrincipal += payment.extraPrincipal;
+        year.summary.extraPrincipal += payment.extraPrincipal;
 
         // Apply cumulative snapshot
         payment.snapshot = {
           cumulativeInterest: schedule.summary.interest,
-          cumulativePrincipal: schedule.summary.principal,
+          cumulativePrincipal: schedule.summary.principal + schedule.summary.extraPrincipal,
           remainingBalance: balance
         };
 
@@ -94,12 +97,13 @@ var app = new Vue({
       const lastYear = schedule.years[schedule.years.length - 1];
       const lastPayment = lastYear.payments[lastYear.payments.length - 1];
 
-      // Set "last" pointers
+      // 0 out on the last payment
       if (lastPayment.remainingBalance > 0) {
         lastPayment.principal += lastPayment.remainingBalance;
         lastPayment.remainingBalance = 0;
       }
 
+      // Set "last" pointers
       schedule.lastPaymentYear = schedule.years.length;
       schedule.lastPaymentMonth = lastYear.payments.length;
       schedule.lastPayment = lastPayment;
